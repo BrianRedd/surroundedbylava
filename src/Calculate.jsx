@@ -3,7 +3,7 @@ import React from "react";
 import * as data from "./data/gridData";
 
 const Calculate = props => {
-  const { grid, setGrid, setVisited } = props;
+  const { grid, setVisited } = props;
 
   const thisGrid = [...grid];
 
@@ -58,7 +58,7 @@ const Calculate = props => {
         }
       }
     }
-    setGrid(thisGrid);
+    // setGrid(thisGrid);
     setVisited(visited);
   };
 
