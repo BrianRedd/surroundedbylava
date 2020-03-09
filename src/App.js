@@ -1,53 +1,46 @@
 import React, { useState } from "react";
 import "./App.css";
+
+import * as data from "./data/gridData";
+
 import Grid from "./Grid";
 import Calculate from "./Calculate";
 
 function App() {
-  const [length, setLength] = useState(5);
   const [grid, setGrid] = useState(null);
   const [visited, setVisited] = useState(null);
 
   const createGrid = () => {
     const temp = [];
-    const vTemp = [];
-    for (let i = 0; i < length; i += 1) {
+    setVisited(null);
+    for (let i = 0; i < 7; i += 1) {
       const row = [];
-      const vRow = [];
-      for (let ii = 0; ii < length; ii += 1) {
-        row.push(Math.round(Math.random()));
-        vRow.push(0);
+      for (let ii = 0; ii < 11; ii += 1) {
+        let gridValue = Math.round(Math.random()) ? "L" : "O";
+        if (data.voidLavaSquares.includes(`${i}_${ii}`)) {
+          gridValue = "W";
+        }
+        if (gridValue === "O" && data.gateSquares.includes(`${i}_${ii}`)) {
+          gridValue = "X";
+        }
+        row.push(gridValue);
       }
       temp.push(row);
-      vTemp.push(vRow);
     }
     setGrid(temp);
-    setVisited(vTemp);
   };
 
   return (
     <div className="App">
-      <h1>Island Problem</h1>
-      <div style={{ margin: "5px" }}>
-        <span style={{ margin: "5px" }}>Number of Squares:</span>
-        <select
-          onChange={e => {
-            setLength(e.target.value);
-          }}
-        >
-          <option value={5}>5</option>
-          <option value={10}>10</option>
-          <option value={15}>15</option>
-          <option value={20}>20</option>
-        </select>
-      </div>
+      <h1>Surrounded By Lava</h1>
       {grid && (
         <React.Fragment>
           <Grid grid={grid} />
-          <Calculate grid={grid} visited={visited} createGrid={createGrid} />
+          <Calculate grid={grid} setGrid={setGrid} setVisited={setVisited} />
         </React.Fragment>
       )}
-      {!grid && <button onClick={createGrid}>New Grid</button>}
+      <button onClick={createGrid}>New Grid</button>
+      <div>{JSON.stringify(visited)}</div>
     </div>
   );
 }

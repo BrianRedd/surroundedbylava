@@ -5,7 +5,7 @@ const Row = ({ array, rowKey }) => {
     return (
       <div
         key={`${rowKey}-${idx}`}
-        className={`square ${square ? "land" : "sea"}`}
+        className={`square ${square}`}
       >
         {square}
       </div>

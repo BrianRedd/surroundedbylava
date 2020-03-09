@@ -1,63 +1,70 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+
+import * as data from "./data/gridData";
 
 const Calculate = props => {
-  const { grid, visited, createGrid } = props;
+  const { grid, setGrid, setVisited } = props;
 
-  const [numberOfIslands, setNumberOfIslands] = useState(0);
+  const thisGrid = [...grid];
 
-  useEffect(() => {
-    let totalVisited = 0;
-    for (let i = 0; i < visited.length; i += 1) {
-      for (let j = 0; j < visited[i].length; j += 1) {
-        totalVisited += visited[i][j];
-      }
+  const boundaryDFS = (thisGrid, i, j) => {
+    if (i > thisGrid.length - 1 || i < 0 || j > thisGrid[0].length || j < 0)
+      return;
+
+    if (thisGrid[i][j] === "O") thisGrid[i][j] = "*";
+
+    if (i > 0 && thisGrid[i - 1][j] === "O") {
+      boundaryDFS(thisGrid, i - 1, j);
     }
-    setNumberOfIslands(totalVisited);
-  }, [visited]);
 
-  const dfs = (i, j) => {
-    if (
-      i < 0 ||
-      i >= grid.length ||
-      j < 0 ||
-      j >= grid[i].length ||
-      grid[i][j] === 0 ||
-      visited[i][j] === 1
-    ) {
-      return 0;
+    if (i < thisGrid.length - 1 && thisGrid[i + 1][j] === "O") {
+      boundaryDFS(thisGrid, i + 1, j);
     }
-    visited[i][j] = 1;
-    dfs(i + 1, j);
-    dfs(i - 1, j);
-    dfs(i, j + 1);
-    dfs(i, j - 1);
-    return 1;
+
+    if (j > 0 && thisGrid[i][j - 1] === "O") {
+      boundaryDFS(thisGrid, i, j - 1);
+    }
+
+    if (i < thisGrid[0].length - 1 && thisGrid[i][j + 1] === "O") {
+      boundaryDFS(thisGrid, i, j + 1);
+    }
+
+    return;
   };
 
-  const calculateIslands = () => {
-    if (!grid || !grid.length) {
-      setNumberOfIslands(0);
+  const convertToLava = () => {
+    const visited = [];
+    if (!thisGrid.length === 0 || !thisGrid[0].length) {
+      return;
     }
-    let islands = 0;
-    for (let i = 0; i < grid.length; i += 1) {
-      for (let j = 0; j < grid[i].length; j += 1) {
-        if (grid[i][j] === 1) {
-          islands += dfs(i, j);
+    let rows = thisGrid.length;
+    let columns = thisGrid[0].length;
+
+    data.gateSquares.forEach(square => {
+      const coords = square.split("_");
+      const i = parseFloat(coords[0]);
+      const j = parseFloat(coords[1]);
+
+      if (thisGrid[i][j] === "X") boundaryDFS(thisGrid, i, j);
+    });
+
+    for (let i = 0; i < rows; i += 1) {
+      for (let j = 0; j < columns; j += 1) {
+        if (thisGrid[i][j] === "O") {
+          thisGrid[i][j] = "L";
+          visited.push(`${i}_${j}`);
+        } else if (thisGrid[i][j] === "*") {
+          thisGrid[i][j] = "O";
         }
       }
     }
-
-    setNumberOfIslands(islands);
+    setGrid(thisGrid);
+    setVisited(visited);
   };
 
   return (
     <div>
-      {!numberOfIslands ? (
-        <button onClick={calculateIslands}>Calculate</button>
-      ) : (
-        <button onClick={createGrid}>New Grid</button>
-      )}
-      {numberOfIslands > 0 && <div>Number of Islands: {numberOfIslands}</div>}
+      <button onClick={convertToLava}>Convert</button>
     </div>
   );
 };
