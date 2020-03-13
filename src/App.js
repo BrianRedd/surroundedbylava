@@ -1,3 +1,5 @@
+/** @module App */
+
 import React, { useState } from "react";
 import "./App.css";
 
@@ -6,10 +8,21 @@ import * as data from "./data/gridData";
 import Grid from "./Grid";
 import Calculate from "./Calculate";
 
+/**
+ * @function App
+ * @description Functional Component for Island Problem app
+ * @returns {React.Component}
+ */
 function App() {
   const [grid, setGrid] = useState(null);
   const [visited, setVisited] = useState(null);
 
+  /**
+   * @function createGrid
+   * @description generates 11 by 7 grid, each square is either open ("O") or lava ("L") 50/50
+   * Some corner squares (that don't exist in the Pompeii board) are skipped, and open exits are also
+   * changed to "X"
+   */
   const createGrid = () => {
     const temp = [];
     setVisited(null);
@@ -32,6 +45,10 @@ function App() {
 
   return (
     <div className="App">
+    <header>
+      <a href="http://rbrianredd.com" target="_new">rbr.com</a>
+      <a href="https://github.com/BrianRedd/reactislandproblem" target="_new">GitHub</a>
+    </header>
       <h1>Surrounded By Lava</h1>
       {grid && (
         <React.Fragment>

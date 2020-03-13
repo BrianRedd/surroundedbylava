@@ -1,12 +1,17 @@
+/** @module Grid */
+
 import React from "react";
 
+/**
+ * @function Row
+ * @description returns Row
+ * @param {Object} props
+ * @returns {React.Component}
+ */
 const Row = ({ array, rowKey }) => {
   const row = array.map((square, idx) => {
     return (
-      <div
-        key={`${rowKey}-${idx}`}
-        className={`square ${square}`}
-      >
+      <div key={`${rowKey}-${idx}`} className={`square ${square}`}>
         {square}
       </div>
     );
@@ -14,6 +19,12 @@ const Row = ({ array, rowKey }) => {
   return row;
 };
 
+/**
+ * @function Rows
+ * @description returns Rows (Grid)
+ * @param {Object} props
+ * @returns {React.Component}
+ */
 const Rows = ({ grid }) => {
   const rows = grid.map((row, idx) => {
     const key = idx;
@@ -26,6 +37,11 @@ const Rows = ({ grid }) => {
   return rows;
 };
 
+/**
+ * @function Grid
+ * @description Presentational Component that converts grid array to visual grid
+ * @param {Object} props
+ */
 const Grid = props => {
   const { grid } = props;
   return (
